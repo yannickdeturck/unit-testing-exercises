@@ -27,34 +27,92 @@ public class Exercise01IncrementerTest {
 
     @Test
     public void given_0_should_result_in_1() {
-        // TODO Tip: use AssertJ's Assertions.assertThat(...) to assert the result
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        // act
+        int result = incrementer.compute(0);
+
+        // assert
+        Assertions.assertThat(result).isEqualTo(1);
     }
 
     @Test
     public void given_99_should_result_in_100() {
-        // TODO
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        // act
+        int result = incrementer.compute(99);
+
+        // assert
+        Assertions.assertThat(result).isEqualTo(100);
     }
 
     @Test
     public void given_minus_1_should_throw_an_illegal_argument_exception() {
-        // TODO Tip 1: make use of Assertions.fail to properly have the test fail if the compute
-        // doesn't throw an exception
-        // TODO Tip 2: While catching the exception, verify that it's an instance of IllegalArgumentException
-        // and that exception's message is "'-1' isn't allowed."
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        try {
+            // act
+            incrementer.compute(-1);
+            Assertions.fail("Should fail!");
+        } catch (Exception ia) {
+            // assert
+            Assertions.assertThat(ia)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("'-1' isn't allowed.");
+        }
     }
 
     @Test
     public void given_100_should_throw_an_illegal_argument_exception() {
-        // TODO
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        try {
+            // act
+            incrementer.compute(100);
+            Assertions.fail("Should fail!");
+        } catch (Exception ia) {
+            // assert
+            Assertions.assertThat(ia)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("'100' isn't allowed.");
+        }
     }
 
     @Test
     public void given_13_should_throw_an_catastrophic_exception() {
-        // TODO Tip: Don't forget to check whether the exception is an instance of CatastrophicException
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        try {
+            // act
+            incrementer.compute(13);
+            Assertions.fail("Should fail!");
+        } catch (Exception ia) {
+            // assert
+            Assertions.assertThat(ia)
+                    .isInstanceOf(CatastrophicException.class)
+                    .hasMessage("Bad luck!!");
+        }
     }
 
     @Test
     public void given_0_until_99_besides_13_should_result_in_an_incremented_number() {
-        // TODO Tip: use a for loop to run through the numbers
+        // arrange
+        Incrementer incrementer = new Incrementer();
+
+        // act
+        for (int i=0; i<100; i++) {
+            if (i == 13) {
+                continue;
+            }
+            int result = incrementer.compute(i);
+            // assert
+            Assertions.assertThat(result).isEqualTo(i+1);
+        }
     }
 }
