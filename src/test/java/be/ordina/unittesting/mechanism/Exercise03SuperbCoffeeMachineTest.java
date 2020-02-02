@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Here we have a ExpressoMachine with a coffee and water container.
  * Basically, if the machine has enough coffee (beans) and water, it can make coffee.
  */
-// TODO Add the @RunWith annotation with the MockitoJUnitRunner.class to set the class up for Mockito usage
+@RunWith(MockitoJUnitRunner.class)
 public class Exercise03SuperbCoffeeMachineTest {
-    // TODO use the @Mock annotation to have Mockito create a mock instance
+    @Mock
     private Container coffeeBeanContainer;
 
-    // TODO also mock this
+    @Mock
     private Container waterContainer;
 
     private SuperbCoffeeMachine machine;
@@ -37,68 +37,57 @@ public class Exercise03SuperbCoffeeMachineTest {
 
     @After
     public void tearDown() {
-        // TODO we want to make sure that all mocks we use have all their calls verified
-        // we can achieve this via Mockito.verifyNoMoreInteractions(mock1, mock2)
+        Mockito.verifyNoMoreInteractions(coffeeBeanContainer, waterContainer);
     }
 
     @Test
     public void given_insufficient_coffee_beans_make_coffee_should_return_no_coffee_portion() {
         // given
-        // TODO Use Mockito.when to have the coffeeBeanContainer.getPortion return false
-
+        final PortionSize portionSize = PortionSize.SMALL;
+        Mockito.when(this.coffeeBeanContainer.getPortion(portionSize)).thenReturn(false);
 
         // when
-        // TODO invoke the makeCoffee method of the machine instance
-
+        Optional<Portion> coffeePortion = machine.makeCoffee(portionSize);
 
         // then
-        // TODO assert that the result from makeCoffee is an optional empty
+        assertThat(coffeePortion).isEmpty();
 
-        // TODO use Mockito.verify to verify the coffeeBeanContainer's getPortion invocation
-
+        Mockito.verify(coffeeBeanContainer).getPortion(portionSize);
     }
 
     @Test
     public void given_insufficient_water_make_coffee_should_return_no_coffee_portion() {
         // given
-        // TODO Use Mockito.when to have the coffeeBeanContainer.getPortion return true
-        // TODO Use Mockito.when to have the waterContainer.getPortion return false
-
+        final PortionSize portionSize = PortionSize.SMALL;
+        Mockito.when(this.coffeeBeanContainer.getPortion(portionSize)).thenReturn(true);
+        Mockito.when(this.waterContainer.getPortion(portionSize)).thenReturn(false);
 
         // when
-        // TODO invoke the makeCoffee method of the machine instance
-
+        Optional<Portion> coffeePortion = machine.makeCoffee(portionSize);
 
         // then
-        // TODO assert that the result from makeCoffee is an optional empty
+        assertThat(coffeePortion).isEmpty();
 
-        // TODO use Mockito.verify to verify the coffeeBeanContainer's getPortion invocation
-        // TODO use Mockito.verify to verify the waterContainer's getPortion invocation
+        Mockito.verify(coffeeBeanContainer).getPortion(portionSize);
+        Mockito.verify(waterContainer).getPortion(portionSize);
     }
 
     @Test
     public void given_sufficient_coffee_beans_and_water_make_coffee_should_return_coffee_portion() {
         // given
-        // TODO Use Mockito.when to have the coffeeBeanContainer.getPortion return true
-        
-        // TODO Use Mockito.when to have the waterContainer.getPortion return true
-
+        final PortionSize portionSize = PortionSize.SMALL;
+        Mockito.when(this.coffeeBeanContainer.getPortion(portionSize)).thenReturn(true);
+        Mockito.when(this.waterContainer.getPortion(portionSize)).thenReturn(true);
 
         // when
-        // TODO invoke the makeCoffee method of the machine instance
-
+        Optional<Portion> coffeePortion = machine.makeCoffee(portionSize);
 
         // then
-        // TODO assert that the result from makeCoffee is not an optional empty
+        assertThat(coffeePortion).isNotEmpty();
+        assertThat(coffeePortion.get().getPortionType()).isEqualTo(PortionType.COFFEE);
+        assertThat(coffeePortion.get().getPortionSize()).isEqualTo(portionSize);
 
-        // TODO assert that the result's portion type from makeCoffee is PortionType.COFFEE
-
-        // TODO assert that the result's portion size from makeCoffee is PortionSize.SMALL
-
-
-        // TODO use Mockito.verify to verify the coffeeBeanContainer's getPortion invocation
-
-        // TODO use Mockito.verify to verify the waterContainer's getPortion invocation
-
+        Mockito.verify(coffeeBeanContainer).getPortion(portionSize);
+        Mockito.verify(waterContainer).getPortion(portionSize);
     }
 }
